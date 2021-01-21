@@ -1,0 +1,3 @@
+ofxFFmpegRecorder
+ofxOsc
+ofxPubSubOsc
