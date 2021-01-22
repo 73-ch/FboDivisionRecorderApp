@@ -27,8 +27,8 @@ void FboRecorder::startRecord() {
         
         auto file = getFileNameFromCount(takeCount);
 
-        recorder.setOutputPath(ofToDataPath(file, true));
-        recorder.setVideoCodec("libx264");
+        recorder.setOutputPath(file);
+        recorder.setPixelFormat(OF_IMAGE_COLOR);
         recorder.setBitRate(8000);
         recorder.startCustomRecord();
         ofLogNotice() << "start recording";
@@ -74,6 +74,8 @@ int FboRecorder::getCurrentTakeCount() const {
 }
 
 string FboRecorder::getLatestPlayableFilePath() const {
+    if (takeCount == 0) return "";
+
     if (recorder.isRecording()) {
         return getFileNameFromCount(takeCount - 1);
     } else {
@@ -83,5 +85,5 @@ string FboRecorder::getLatestPlayableFilePath() const {
 }
 
 string FboRecorder::getFileNameFromCount(const int count) const {
-    return fileName + "-" + ofToString(count) + ".mp4";
+    return ofToDataPath(fileName + "-" + ofToString(count) + ".mp4", true);
 }

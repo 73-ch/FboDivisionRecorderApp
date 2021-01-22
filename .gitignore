@@ -6,3 +6,5 @@ obj
 *.DS_Store
 openFrameworks-Info.plist
 *.xcconfig
+*.mp4
+*.mov

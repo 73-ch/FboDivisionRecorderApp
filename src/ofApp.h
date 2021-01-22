@@ -1,10 +1,14 @@
 #pragma once
 
 #include "ofMain.h"
+
 #include "ofxFFmpegRecorder.h"
+#include "ofxPubSubOsc.h"
 
 #include "FboRecorder.hpp"
 #include "FboDivisionRecorder.hpp"
+#include "MultipleMoviePlayer.hpp"
+
 
 class ofApp : public ofBaseApp{
 
@@ -34,5 +38,7 @@ private:
     FboRecorder fboRecorder;
     
     FboDivisionRecorder* divisionRecorder;
+    MultipleMoviePlayer player;
+    vector<ofVideoPlayer> players;
 
 };

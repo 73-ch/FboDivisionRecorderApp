@@ -8,18 +8,54 @@ ofApp::ofApp() {
     
     divisionRecorder = new FboDivisionRecorder(5, glm::vec2(grabber.getWidth(), grabber.getHeight()));
     
-    
 }
 
 
 //--------------------------------------------------------------
 void ofApp::setup(){
     // fboRecorder.setup(glm::vec2(grabber.getWidth(), grabber.getHeight()));
+    
+    ofxSubscribeOsc(3333, "/playback", [&](const int index) {
+        auto path = divisionRecorder->getLatestPlayableFilePath(index);
+        if (path == "") {
+            ofLogWarning() << "no recording on index: " << index;
+        } else {
+//            ofVideoPlayer player;
+//            player.load(path);
+//            player.play();
+//            players.push_back(player);
+
+            const int segmentWidth = grabber.getWidth() / 5;
+
+            player.playMovie(path, glm::vec2(segmentWidth * index, 0), glm::vec2(segmentWidth, grabber.getHeight()));
+        }
+    });
+    
+    
+    ofxSubscribeOsc(3333, "/movie_recorder/start", [&](const int index) {
+        if (!divisionRecorder->isRecording(index)) {
+            divisionRecorder->startRecord(index);
+        }
+    });
+    
+    ofxSubscribeOsc(3333, "/movie_recorder/stop", [&](const int index) {
+        if (divisionRecorder->isRecording(index)) {
+            divisionRecorder->stopRecord(index);
+        }
+    });
+    
+    ofxSubscribeOsc(3333, "/movie_player/stopAll", [&]() {
+        player.stopAll();
+    });
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     grabber.update();
+    
+//    for (auto p : players) p.update();
+    
+    player.update();
 }
 
 //--------------------------------------------------------------
@@ -45,6 +81,7 @@ void ofApp::draw(){
 
     // sceneの描画処理
     fbo.draw(0,0);
+    player.draw();
 }
 
 //--------------------------------------------------------------
